@@ -23,7 +23,7 @@ func main() {
 	wc := 2 * math.Pi * fc / fs // normalize frequency
 	wd := 2 * math.Pi * fd / fs // normalize frequency
 
-	LPF := butter.NewBandPass2(wc, wd) // initialize 2nd order band pass butterworth filter
+	BPF := butter.NewBandPass2(wc, wd) // initialize 2nd order band pass butterworth filter
 
 	n := 100 // plot 100 points for demonstrating
 	t := .0  // initalize time axis
@@ -38,14 +38,14 @@ func main() {
 		t += dt
 		tPoints = append(tPoints, t)
 		// mix a 200 hz and a 2000 hz
-		ulow := math.Sin(2 * math.Pi * f1 * t)
-		umiddle := math.Sin(2 * math.Pi * f2 * t)
+		ulow := 0.5 * math.Sin(2*math.Pi*f1*t)
+		umiddle := 1 * math.Sin(2*math.Pi*f2*t)
 		uhigh := 0.5 * math.Sin(2*math.Pi*f3*t)
 
 		u := ulow + umiddle + uhigh
 		uPoints = append(uPoints, u)
 
-		y1 := LPF.Next(u)
+		y1 := BPF.Next(u)
 		y1Points = append(y1Points, y1)
 	}
 
@@ -53,7 +53,7 @@ func main() {
 
 	for i := 0; i < n; i++ {
 
-		y2 := LPF.Next(y1Points[i])
+		y2 := BPF.Next(y1Points[i])
 		y2Points = append(y2Points, y2)
 	}
 
